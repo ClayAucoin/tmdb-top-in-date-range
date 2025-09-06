@@ -14,9 +14,51 @@
 
 <body>
 
-    <button id="getListButton" class="btn btn-primary" type="button">Send</button>
+    <div class="container my-3">
+        <h3>TMDBs Top Movies & TV Shows in a date range</h3>
+        <div class="row g-2 align-items-end">
+            <div class="col-sm-3">
+                <label class="form-label">Start (DD-MM-YYYY)</label>
+                <input id="start" type="date" class="form-control">
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label">End (DD-MM-YYYY)</label>
+                <input id="end" type="date" class="form-control">
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">How many</label><br>
+                <!-- <input id="topNumber" class="form-control" placeholder="YOUR_TMDB_V3_KEY"> -->
+                <select id="topNumber" class="form-select" style="width: 100px">
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                    <option value=6>6</option>
+                    <option value=7>7</option>
+                    <option value=8>8</option>
+                    <option value=9>9</option>
+                    <option value=10>10</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <button id="go" class="btn btn-primary w-100">Run</button>
+            </div>
+        </div>
 
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <h5>Top <span id="topMoviesNum"></span> Movies</h5>
+                <ul id="movies" class="list-group small"></ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Top <span id="topTVNum"></span> TV Shows</h5>
+                <ul id="tv" class="list-group small"></ul>
+            </div>
+        </div>
+    </div>
 
+    <script src='js/secret-variables.js'></script>
     <script src='js/helpers-full.js'></script>
     <script src='js/script.js'></script>
 
