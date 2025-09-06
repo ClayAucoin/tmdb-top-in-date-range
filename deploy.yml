@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ] # change if your default branch is different
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get repo name
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
+
+      # If you have a build step (Vite/React/etc.), add it here
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      # - run: npm ci
+      # - run: npm run build
+
+      # Change this to your built site folder if you have one (e.g., dist)
+      - name: Set site path
+        run: echo "SITE_DIR=." >> $GITHUB_ENV
+
+      - name: Rewrite absolute URLs to /${REPO_NAME}/...
+        working-directory: ${{ env.SITE_DIR }}
+        run: |
+          echo "Rewriting root-relative URLs under ${SITE_DIR}..."
+          # HTML href/src and CSS url(/...) — avoid protocol-relative '//' and data: URLs
+          find . -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" \) -print0 | xargs -0 sed -i \
+            -e "s|href=\"/\([^/]\)|href=\"/${REPO_NAME}/\1|g" \
+            -e "s|src=\"/\([^/]\)|src=\"/${REPO_NAME}/\1|g" \
+            -e "s|url(/\\([^/)]\\)|url(/${REPO_NAME}/\\1|g"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.SITE_DIR }}
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
