@@ -1,0 +1,4 @@
+node_modules/
+secret-variables.js
+.DS_Store
+Thumbs.db
