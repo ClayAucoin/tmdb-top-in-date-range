@@ -2,7 +2,9 @@
 let tmdbResponse = "";
 
 const $ = (id) => document.getElementById(id);
-let topNumber = document.getElementById("topNumber").value;
+let topNumber = $("topNumber").value;
+
+console.log("show: " + topNumber);
 
 function buildUrl(path, params) {
     const url = new URL(`https://api.themoviedb.org/3/${path}`);
@@ -11,7 +13,7 @@ function buildUrl(path, params) {
 }
 
 async function topMovies(start, end, key) {
-    document.getElementById("topMoviesNum").textContent = topNumber;
+    setQuantity();
 
     const url = buildUrl("discover/movie", {
         api_key: key,
@@ -35,7 +37,7 @@ async function topMovies(start, end, key) {
 }
 
 async function topTV(start, end, key) {
-    document.getElementById("topTVNum").textContent = topNumber;
+    setQuantity();
 
     const url = buildUrl("discover/tv", {
         api_key: key,
@@ -72,6 +74,8 @@ function renderList(el, items, type) {
 }
 
 $("go").addEventListener("click", async () => {
+    setQuantity()
+
     const key = HF_TOKEN;
     const start = $("start").value;
     const end = $("end").value;
@@ -87,3 +91,14 @@ $("go").addEventListener("click", async () => {
         moviesEl.innerHTML = tvEl.innerHTML = `<li class="list-group-item text-danger">Error: ${e.message}</li>`;
     }
 });
+
+$("topNumber").addEventListener("change", () => {
+    setQuantity()
+})
+
+function setQuantity() {
+    topNumber = $("topNumber").value;
+    $("howMany").textContent = topNumber;
+    $("topMoviesNum").textContent = topNumber;
+    $("topTVNum").textContent = topNumber;
+}
